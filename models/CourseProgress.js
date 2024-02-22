@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-const courseProgress = new mongoose.Schema({
+const courseProgressSchema = new mongoose.Schema({
 
     courseId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,4 +15,4 @@ const courseProgress = new mongoose.Schema({
     ]
 });
 
-module.exports = mongoose.Schema('CourseProgress', courseProgress);
+module.exports = mongoose.Schema('CourseProgress', courseProgressSchema);
