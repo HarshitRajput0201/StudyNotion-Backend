@@ -13,6 +13,9 @@ const profileSchema = new mongoose.Schema({
     about: {
         type: String,
         trim: true
+    },
+    image: {
+        type: String
     }
 });
 
