@@ -63,7 +63,7 @@ exports.isInstructor = async (req, res, next) => {
     catch (error) {
         return res.status(401).json({
             success: false,
-            messsage: 'User Role Cannot be Verify'
+            messsage: 'User Role Cannot Be Verify'
         });
     }
 }

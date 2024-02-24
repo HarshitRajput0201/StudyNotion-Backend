@@ -103,7 +103,7 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        const hashedPassword = bcrypt.hash(password);
+        const hashedPassword = bcrypt.hash(password, 10);
 
         const profileDetails = await Profile.create({
             gender: null,
