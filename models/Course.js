@@ -22,6 +22,9 @@ const courseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Tag"
     },
+    thumbnail:{
+        type:String,
+    },
     studentEnrolled: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
