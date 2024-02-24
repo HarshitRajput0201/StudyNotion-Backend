@@ -6,7 +6,7 @@ exports.createTag = async (req, res) => {
         if(!name || !description){
             return res.status(401).json({
                 success: false,
-                messsage: 'All Field Required'
+                message: 'All Field Required'
             });
         }
 
@@ -18,14 +18,15 @@ exports.createTag = async (req, res) => {
         );
         return res.status(200).json({
             success: true,
-            messsage: 'Tag Created'
+            message: 'Tag Created',
+            data: tagDetails
         });
     }
     catch (error) {
         console.log(error);
         return res.status(401).json({
             success: false,
-            messsage: 'Tag Cannot Be Created'
+            message: 'Tag Cannot Be Created'
         });
     }
 }
@@ -35,14 +36,15 @@ exports.showAllTags = async (req, res) => {
         const allTags = await Tag.find({}, {name: true, description: true});
         return res.status(200).json({
             success: true,
-            messsage: 'Showing Tags'
+            message: 'Showing Tags',
+            data: allTags
         });
     } 
     catch (error) {
         console.log(error);
         return res.status(401).json({
             success: false,
-            messsage: 'Tag Cannot Be Created'
+            message: 'Tag Cannot Be Created'
         });
     }
 }

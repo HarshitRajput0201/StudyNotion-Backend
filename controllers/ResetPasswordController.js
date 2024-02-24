@@ -10,7 +10,7 @@ exports.resetPasswordToken = async (req, res) => {
         if(!user){
             return res.status(401).json({
                 success: false,
-                messsage: 'user Not Found'
+                message: 'user Not Found'
             });
         }
 
@@ -30,14 +30,14 @@ exports.resetPasswordToken = async (req, res) => {
         await mailSender(email, 'Password Reset Link', `link: ${url}`);
         return res.status(201).json({
             success: true,
-            messsage: 'Link Sent Successfully'
+            message: 'Link Sent Successfully'
         });
     } 
     catch (error) {
         console.log(error);
         return res.status(401).json({
             success: false,
-            messsage: 'Somethinng Went Wrong While Resetting Password'
+            message: 'Somethinng Went Wrong While Resetting Password'
         });
     }
 }
@@ -48,7 +48,7 @@ exports.resetPassword = async (req,res) => {
         if(password !== confirmPassword){
             return res.status(401).json({
                 success: false,
-                messsage: 'Password Does Not Match'
+                message: 'Password Does Not Match'
             });
         }
 
@@ -56,13 +56,13 @@ exports.resetPassword = async (req,res) => {
         if(!userDetails){
             return res.status(401).json({
                 success: false,
-                messsage: 'Invalid Token'
+                message: 'Invalid Token'
             });
         }
         if(userDetails.resetPasswordExpire < Date.now()){
             return res.status(401).json({
                 success: false,
-                messsage: 'Token Expired'
+                message: 'Token Expired'
             });
         }
 
@@ -80,7 +80,7 @@ exports.resetPassword = async (req,res) => {
         );
         return res.status(201).json({
             success: true,
-            messsage: 'Password Updated Successfully'
+            message: 'Password Updated Successfully'
         });
 
     } 
@@ -88,7 +88,7 @@ exports.resetPassword = async (req,res) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            messsage: 'Somethinng Went Wrong While Resetting Password'
+            message: 'Somethinng Went Wrong While Resetting Password'
         });
     }
 }

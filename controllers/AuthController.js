@@ -15,7 +15,7 @@ exports.sendOTP = async (req, res) => {
         if(checkUser){
             return res.status(401).json({
                 success: false,
-                messsage: 'User Already Registered'
+                message: 'User Already Registered'
             });
         }
 
@@ -39,7 +39,7 @@ exports.sendOTP = async (req, res) => {
         const otpBody = await OTP.create(otpPayload);
         return res.status(200).json({
             success: true,
-            messsage: 'OTP Sent'
+            message: 'OTP Sent'
         });
     } 
 
@@ -47,7 +47,7 @@ exports.sendOTP = async (req, res) => {
         console.log('Error in Sending OTP', error);
         return res.status(400).json({
             success: false,
-            messsage: 'failed to Send OTP'
+            message: 'failed to Send OTP'
         });
     }
 
@@ -70,14 +70,14 @@ exports.signUp = async (req, res) => {
         if(!firstName || !lastName || !email || !password || !contactNumber || !otp) {
             return res.status(401).json({
                 success: false,
-                messsage: 'All fields are required'
+                message: 'All fields are required'
             });
         }
 
         if(password !== confirmPassword) {
             return res.status(401).json({
                 success: false,
-                messsage: 'Password Do not Match'
+                message: 'Password Do not Match'
             });
         }
 
@@ -85,7 +85,7 @@ exports.signUp = async (req, res) => {
         if(existingUser){
             return res.status(401).json({
                 success: false,
-                messsage: 'User Already Registered'
+                message: 'User Already Registered'
             });
         }
 
@@ -93,13 +93,13 @@ exports.signUp = async (req, res) => {
         if(recentOtp.length == 0){
             return res.status(401).json({
                 success: false,
-                messsage: 'Generate Another OTP'
+                message: 'Generate Another OTP'
             });
         }
         else if(otp !== recentOtp.otp){
             return res.status(401).json({
                 success: false,
-                messsage: 'Invalid OTP'
+                message: 'Invalid OTP'
             });
         }
 
@@ -123,7 +123,7 @@ exports.signUp = async (req, res) => {
         });
         return res.status(201).json({
             success: true,
-            messsage: 'Profile Created',
+            message: 'Profile Created',
             data: user
         });
     } 
@@ -131,7 +131,7 @@ exports.signUp = async (req, res) => {
         console.log('Error in Sign Up', error);
         return res.status(401).json({
             success: false,
-            messsage: 'failed to SignUp'
+            message: 'failed to SignUp'
         });
     }
 
@@ -144,7 +144,7 @@ exports.login = async (req, res) => {
         if(!email || !password){
             return res.status(401).json({
                 success: false,
-                messsage: 'Both Fields Required'
+                message: 'Both Fields Required'
             });
         }
 
@@ -152,7 +152,7 @@ exports.login = async (req, res) => {
         if(!user){
             return res.status(401).json({
                 success: false,
-                messsage: 'User Does Not Exist'
+                message: 'User Does Not Exist'
             });
         }
 
@@ -180,7 +180,7 @@ exports.login = async (req, res) => {
         else{
             return res.status(401).json({
                 success: false,
-                messsage: 'Password Is Incorrect'
+                message: 'Password Is Incorrect'
             });
         }
 
@@ -189,7 +189,7 @@ exports.login = async (req, res) => {
         console.log(error)
         return res.status(401).json({
             success: false,
-            messsage: 'LogIn Failed'
+            message: 'LogIn Failed'
         });
     }
 }

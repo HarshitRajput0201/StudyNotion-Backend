@@ -8,7 +8,7 @@ exports.auth = async (req, res, next) => {
         if(!token){
             return res.status(401).json({
                 success: false,
-                messsage: 'No Token Available'
+                message: 'No Token Available'
             });
         }
         try {
@@ -18,7 +18,7 @@ exports.auth = async (req, res, next) => {
         catch (error) {
             return res.status(401).json({
                 success: false,
-                messsage: 'Token is Invalid'
+                message: 'Token is Invalid'
             });
         }
         next();
@@ -27,7 +27,7 @@ exports.auth = async (req, res, next) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            messsage: 'Cannot Validate Token'
+            message: 'Cannot Validate Token'
         });
     }
 }
@@ -37,7 +37,7 @@ exports.isStudent = async (req, res, next) => {
         if(req.user.accountType !== 'Student'){
             return res.status(401).json({
                 success: false,
-                messsage: 'This Route is only for Student'
+                message: 'This Route is only for Student'
             });
         }
         next();
@@ -45,7 +45,7 @@ exports.isStudent = async (req, res, next) => {
     catch (error) {
         return res.status(401).json({
             success: false,
-            messsage: 'User Role Cannot be Verify'
+            message: 'User Role Cannot be Verify'
         });
     }
 }
@@ -55,7 +55,7 @@ exports.isInstructor = async (req, res, next) => {
         if(req.user.accountType !== 'Instructor'){
             return res.status(401).json({
                 success: false,
-                messsage: 'This Route is only for Student'
+                message: 'This Route is only for Student'
             });
         }
         next();
@@ -63,7 +63,7 @@ exports.isInstructor = async (req, res, next) => {
     catch (error) {
         return res.status(401).json({
             success: false,
-            messsage: 'User Role Cannot Be Verify'
+            message: 'User Role Cannot Be Verify'
         });
     }
 }
@@ -73,7 +73,7 @@ exports.isAdmin = async (req, res, next) => {
         if(req.user.accountType !== 'Admin'){
             return res.status(401).json({
                 success: false,
-                messsage: 'This Route is only for Student'
+                message: 'This Route is only for Student'
             });
         }
         next();
@@ -81,7 +81,7 @@ exports.isAdmin = async (req, res, next) => {
     catch (error) {
         return res.status(401).json({
             success: false,
-            messsage: 'User Role Cannot be Verify'
+            message: 'User Role Cannot be Verify'
         });
     }
 }
