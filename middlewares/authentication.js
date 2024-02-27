@@ -69,7 +69,7 @@ exports.isInstructor = async (req, res, next) => {
 }
 
 exports.isAdmin = async (req, res, next) => {
-    try {
+    try { 
         if(req.user.accountType !== 'Admin'){
             return res.status(401).json({
                 success: false,
@@ -81,7 +81,7 @@ exports.isAdmin = async (req, res, next) => {
     catch (error) {
         return res.status(401).json({
             success: false,
-            message: 'User Role Cannot be Verify'
+            message: 'User Role Cannot Be Verify'
         });
     }
 }
