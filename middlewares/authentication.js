@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
-const User = require("../models/User");
+const User = require('../models/User');
 require('dotenv').config();
 
 exports.auth = async (req, res, next) => {
     try {
-        const token = req.cookie.token || req.body.token || req.header('Authentication').replace('Bearer ', '');
+        const token = req.cookies.token || req.body.token || req.header('Authorisation').replace('Bearer ', '');
         if(!token){
             return res.status(401).json({
                 success: false,
@@ -13,9 +13,11 @@ exports.auth = async (req, res, next) => {
         }
         try {
             const decode = jwt.verify(token, process.env.JWT_SECRET);
+            console.log(decode);
             req.user = decode;
         } 
         catch (error) {
+            console.log(error);
             return res.status(401).json({
                 success: false,
                 message: 'Token is Invalid'
@@ -30,7 +32,7 @@ exports.auth = async (req, res, next) => {
             message: 'Cannot Validate Token'
         });
     }
-}
+};
 
 exports.isStudent = async (req, res, next) => {
     try {
@@ -48,7 +50,7 @@ exports.isStudent = async (req, res, next) => {
             message: 'User Role Cannot be Verify'
         });
     }
-}
+};
 
 exports.isInstructor = async (req, res, next) => {
     try {
@@ -66,7 +68,7 @@ exports.isInstructor = async (req, res, next) => {
             message: 'User Role Cannot Be Verify'
         });
     }
-}
+};
 
 exports.isAdmin = async (req, res, next) => {
     try { 
@@ -84,4 +86,4 @@ exports.isAdmin = async (req, res, next) => {
             message: 'User Role Cannot Be Verify'
         });
     }
-}
+};
