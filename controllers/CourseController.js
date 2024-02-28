@@ -147,4 +147,4 @@ exports.getCourseDetails = async (req, res) => {
             message: 'Course Not Found'
         });
     }
-}
+};
