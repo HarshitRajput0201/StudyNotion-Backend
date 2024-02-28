@@ -32,7 +32,7 @@ exports.updateProfile = async (req, res) => {
             message: 'Profile Cannot Be Updated'
         });
     }
-}
+};
 
 exports.deleteAccount = async (req, res) => {
     try {
@@ -60,7 +60,7 @@ exports.deleteAccount = async (req, res) => {
             message: 'Cannot Delete Account'
         });
     }
-}
+};
 
 exports.getAllUserDetails = async (req, res) => {
     try {
@@ -78,4 +78,4 @@ exports.getAllUserDetails = async (req, res) => {
             message: 'User Details Not Found'
         });
     }
-}
+};

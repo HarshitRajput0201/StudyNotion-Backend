@@ -74,7 +74,7 @@ exports.createCourse = async (req, res) => {
             message: 'Course Not Created'
         });
     }
-}
+};
 
 exports.showAllCourses = async (req, res) => {
     try {
@@ -100,6 +100,51 @@ exports.showAllCourses = async (req, res) => {
         return res.status(401).json({
             success: false,
             message: 'Course Not Created'
+        });
+    }
+};
+
+exports.getCourseDetails = async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        const courseDetails = await Course.find(
+                                            { _id: courseId },
+        )
+        .populate(
+            {
+                path: 'Instructor',
+                populate: {
+                    path: 'additionalDetails'
+                }
+            }
+        )
+        .populate('Category')
+        .populate('ratingAndReviews')
+        .populate(
+            {
+                path: 'courseContent',
+                populate: {
+                    path: 'subSection'
+                }
+            }
+        )
+        .exec();
+        if(!courseDetails){
+            return res.status(401).json({
+                success: false,
+                message: 'Course Details Not Found'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: 'Course Details Found',
+        });
+    } 
+    catch (error) {
+        console.log(error);
+        return res.status(401).json({
+            success: false,
+            message: 'Course Not Found'
         });
     }
 }
