@@ -23,6 +23,6 @@ const mailSender = async (email, title, body) => {
     catch (error) {
         console.log(error);
     }
-}
+};
 
 module.exports = mailSender;
