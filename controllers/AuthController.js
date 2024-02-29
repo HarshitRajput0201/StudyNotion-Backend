@@ -151,7 +151,7 @@ exports.login = async (req, res) => {
             message: 'LogIn Failed'
         });
     }
-}
+};
 
 exports.sendOTP = async (req, res) => {
 
@@ -167,26 +167,27 @@ exports.sendOTP = async (req, res) => {
         }
 
         var otp = otpGenerator.generate(6, {
-                                        upperCaseAlphabet: false,
-                                        lowerCaseAlphabet: false,
+                                        upperCaseAlphabets: false,
+                                        lowerCaseAlphabets: false,
                                         specialChars: false
                                         });
         
-        let result = await OTP.findOne({otp:otp});
+        let result = await OTP.findOne({ otp:otp });
         while(result){
             otp = otpGenerator.generate(6, {
                                         upperCaseAlphabet: false,
                                         lowerCaseAlphabet: false,
                                         specialChars: false
                                         });
-            result = await OTP.findOne({otp:otp});
+            result = await OTP.findOne({ otp:otp });
         }
 
         const otpPayload = { email, otp };
         const otpBody = await OTP.create(otpPayload);
         return res.status(200).json({
             success: true,
-            message: 'OTP Sent'
+            message: 'OTP Sent',
+            otp
         });
     } 
 
@@ -194,11 +195,72 @@ exports.sendOTP = async (req, res) => {
         console.log('Error in Sending OTP', error);
         return res.status(400).json({
             success: false,
-            message: 'failed to Send OTP'
+            message: 'Failed To Send OTP'
         });
     }
 
-}
+};
+
+exports.changePassword = async (req, res) => {
+    try {
+        const userDetails = await User.findById(req.user.id);
+        const { oldPassword, newPassword, confirmPassword } = req.body;
+        const isPasswordMatch = await bcrypt.compare(oldPassword, userDetails.password);
+        if(!isPasswordMatch){
+            return res.status(400).json({
+                success: false,
+                message: 'Password Incorrect'
+            });
+        }
+
+        if(newPassword !== confirmPassword){
+            return res.status(400).json({
+                success: false,
+                message: 'Password Does Not Match'
+            });
+        }
+
+        const encryptedPassword = await bcrypt.hash(newPassword, 10);
+        const updatedUserDetails = await User.findByIdAndUpdate(
+            req.user.id,
+            {
+                password: encryptedPassword
+            },
+            {
+                new: true
+            }
+        );
+
+        try {
+            const emailResponse = await mailSender(
+                updatedUserDetails.email,
+                passwordUpdated(
+                    updatedUserDetails.email,
+                    `Password Updated Successfully For ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
+                )
+            );
+            console.log('Email Sent Successfully: ', emailResponse);
+        } 
+        catch (error) {
+            console.log(error);
+            return res.status(400).json({
+                success: false,
+                message: 'Failed To Send Email'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: 'Password Updated Successfully'
+        });
+    } 
+    catch (error) {
+        console.log(error);
+            return res.status(400).json({
+                success: false,
+                message: 'Failed To Update Password'
+            });
+    }
+};
 
 
 
