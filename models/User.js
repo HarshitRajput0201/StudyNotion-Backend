@@ -1,53 +1,62 @@
 const mongoose = require('mongoose');
 
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
 
-    firstName: {
-        type: String,
-        required: true,
-        trim: true
+    {
+        firstName: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        lastName: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        password: {
+            type: String,
+            required: true
+        },
+        accountType: {
+            type: String,
+            enum: ['Admin', 'Student', 'Instructor'],
+            required: true
+        },
+        active: {
+            type: Boolean,
+            default: true
+        },
+        courses: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Course'
+            }
+        ],
+        token: {
+            type: String
+        },
+        resetPasswordExpires: {
+            type: Date
+        },
+        courseProgress: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "CourseProgress"
+        },
+        additionalDetails: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Profile"
+        }
     },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    email: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    contactNumber: {
-        type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    confirmPassword: {
-        type: String,
-        required: true
-    },
-    accountType: {
-        type: String,
-        enum: ["Admin", "Student", "Instructor"],
-        required: true
-    },
-    courses: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course"
-    },
-    courseProgress: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CourseProgress"
-    },
-    additionalDetails: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Profile"
+    {
+        timestamps: true
     }
-});
+);
 
 module.exports = mongoose.model('User', userSchema);
