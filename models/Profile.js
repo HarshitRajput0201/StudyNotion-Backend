@@ -5,9 +5,8 @@ const profileSchema = new mongoose.Schema({
 
     gender: {
         type: String
-        
     },
-    dob: {
+    dateOfBirth: {
         type: String
     },
     about: {
@@ -16,6 +15,10 @@ const profileSchema = new mongoose.Schema({
     },
     image: {
         type: String
+    },
+    contactNumber: {
+        type: Number,
+        trim: true
     }
 });
 
