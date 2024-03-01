@@ -1,12 +1,13 @@
-const {instance} = require('../config/razorpay');
+const { instance } = require('../config/razorpay');
 const Course = require('../models/Course');
 const User = require('../models/User');
 const mailSender = require('../utils/MailSender');
+const { courseEnrollmentEmail } = require('../mail/templates/courseEnrollmentEmail');
 
 exports.capturePayment = async (req, res) => {
     
-    const {course_id} = req.body;
-    const userId = req.user.body;
+    const { course_id } = req.body;
+    const userId = req.user.id;
     if(!course_id){
         return res.status(401).json({
             success: false,
@@ -56,7 +57,8 @@ exports.capturePayment = async (req, res) => {
         const paymentResponse = await instance.orders.create(options);
         return res.status(200).json({
             success: true,
-            message: 'Payment Captured'
+            message: 'Payment Captured',
+            data: paymentResponse
         });
     } 
     catch (error) {
@@ -90,11 +92,31 @@ exports.verifySignature = async (req, res) => {
                 });
             }
 
+            const enrolledStudent = await User.findOneAndUpdate(
+                                                            {
+                                                                _id: userId
+                                                            },
+                                                            {
+                                                                $push: {
+                                                                    courses: courseId
+                                                                }
+                                                            },
+                                                            {
+                                                                new: true
+                                                            }
+            );
+            console.log(enrolledStudent);
+
+            const courseDetails = await Course.findById(courseId);
+            const studentDetails = await User.findById(userId);
             const emailResponse = await mailSender(
                                                 enrolledStudent.email,
-                                                'Congratulations',
-                                                'Hello jee Course Purchased'
+                                                courseEnrollmentEmail(
+                                                    courseDetails.courseName,
+                                                    studentDetails.firstName
+                                                )
             );
+            console.log(emailResponse);
             return res.status(200).json({
                 success: true,
                 message: 'Course Purchased Successfully'
