@@ -9,16 +9,30 @@ exports.createCourse = async (req, res) => {
 
     try {
         const userId = req.user.id;
-        const { courseName, courseDescription, price, tag } = req.body;
+        const { 
+            courseName, 
+            courseDescription, 
+            price,
+            category, 
+            tag,
+            status,
+            courseBenefits,
+            instructions
+        } = req.body;
+
         const thumbnail = req.file.thumbnailImage;
-        if(!courseName || !courseDescription || !price || !tag){
+        if(!courseName || !courseDescription || !price || !tag || !category || !thumbnail || !courseBenefits){
             return res.status(401).json({
                 success: false,
                 message: 'All Fields Are Required'
             });
         }
 
-        const instructorDetails = await User.findById(userId);
+        if(!status || status === undefined){
+            status = 'Draft';
+        }
+
+        const instructorDetails = await User.findById(userId, { accountType: 'Instructor' });
         if(!instructorDetails){
             return res.status(401).json({
                 success: false,
@@ -26,11 +40,11 @@ exports.createCourse = async (req, res) => {
             });
         }
 
-        const tagDetails = await Tag.findById(tag);
-        if(!tagDetails){
+        const categoryDetails = await Category.findById(category);
+        if(!categoryDetails){
             return res.status(401).json({
                 success: false,
-                message: 'Tag Not Found'
+                message: 'Category Details Not Found'
             });
         }
 
@@ -41,8 +55,11 @@ exports.createCourse = async (req, res) => {
                                             courseDescription,
                                             instructor: instructorDetails._id,
                                             price,
-                                            tag: tagDetails._id,
-                                            thumbnail: thumbnail.secure_url
+                                            tag: tag,
+                                            category: categoryDetails._id,
+                                            thumbnail: thumbnail.secure_url,
+                                            status: status,
+                                            instructions: instructions
                                         }
         );
 
@@ -60,11 +77,24 @@ exports.createCourse = async (req, res) => {
                                 }
         );
 
-        //update Tags HW
+        await Category.findByIdAndUpdate(
+                                    {
+                                        _id: category
+                                    },
+                                    {
+                                        $push: {
+                                            courses: newCourse._id
+                                        }
+                                    },
+                                    {
+                                        new: true
+                                    }
+        );
 
         return res.status(200).json({
             success: true,
-            message: 'Course Created'
+            message: 'Course Created',
+            data: newCourse
         });
     } 
     catch (error) {
@@ -76,7 +106,7 @@ exports.createCourse = async (req, res) => {
     }
 };
 
-exports.showAllCourses = async (req, res) => {
+exports.getAllCourses = async (req, res) => {
     try {
         const allCourses = await Course.find({},
                                             {
@@ -84,11 +114,13 @@ exports.showAllCourses = async (req, res) => {
                                                 courseDescription: true,
                                                 instructor: true,
                                                 price: true,
-                                                tag: true,
+                                                ratingAndReviews: true,
                                                 thumbnail: true,
                                                 studentEnrolled: true,
                                             }
-        ).populate('instructor').exec();
+        )
+        .populate('instructor')
+        .exec();
         return res.status(200).json({
             success: true,
             message: 'All Courses Available',
@@ -99,7 +131,7 @@ exports.showAllCourses = async (req, res) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            message: 'Course Not Created'
+            message: 'Course Not Found'
         });
     }
 };
@@ -107,28 +139,26 @@ exports.showAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
     try {
         const { courseId } = req.body;
-        const courseDetails = await Course.find(
-                                            { _id: courseId },
-        )
-        .populate(
-            {
-                path: 'Instructor',
-                populate: {
-                    path: 'additionalDetails'
-                }
-            }
-        )
-        .populate('Category')
-        .populate('ratingAndReviews')
-        .populate(
-            {
-                path: 'courseContent',
-                populate: {
-                    path: 'subSection'
-                }
-            }
-        )
-        .exec();
+        const courseDetails = await Course.find({ _id: courseId },)
+                                                            .populate(
+                                                                {
+                                                                    path: 'instructor',
+                                                                    populate: {
+                                                                        path: 'additionalDetails'
+                                                                    }
+                                                                }
+                                                            )
+                                                            .populate('category')
+                                                            .populate('ratingAndReviews')
+                                                            .populate(
+                                                                {
+                                                                    path: 'courseContent',
+                                                                    populate: {
+                                                                        path: 'subSection'
+                                                                    }
+                                                                }
+                                                            )
+                                                            .exec();
         if(!courseDetails){
             return res.status(401).json({
                 success: false,
@@ -138,6 +168,7 @@ exports.getCourseDetails = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: 'Course Details Found',
+            data: courseDetails
         });
     } 
     catch (error) {
