@@ -10,11 +10,11 @@ exports.resetPasswordToken = async (req, res) => {
         if(!user){
             return res.status(401).json({
                 success: false,
-                message: 'user Not Found'
+                message: 'User Not Found'
             });
         }
 
-        const token = crypto.randomUUID();
+        const token = crypto.randomBytes(20).toString('hex');
         const updatedDetails = await User.findOneAndUpdate({
                                                             email: email
                                                         },
@@ -40,11 +40,11 @@ exports.resetPasswordToken = async (req, res) => {
             message: 'Somethinng Went Wrong While Resetting Password'
         });
     }
-}
+};
 
 exports.resetPassword = async (req,res) => {
     try {
-        const {password, confirmPassword, token} = req.body;
+        const { password, confirmPassword, token } = req.body;
         if(password !== confirmPassword){
             return res.status(401).json({
                 success: false,
@@ -52,14 +52,14 @@ exports.resetPassword = async (req,res) => {
             });
         }
 
-        const userDetails = await User.findOne({token: token});
+        const userDetails = await User.findOne({ token: token });
         if(!userDetails){
             return res.status(401).json({
                 success: false,
                 message: 'Invalid Token'
             });
         }
-        if(userDetails.resetPasswordExpire < Date.now()){
+        if(!(userDetails.resetPasswordExpires > Date.now())){
             return res.status(401).json({
                 success: false,
                 message: 'Token Expired'
@@ -91,5 +91,5 @@ exports.resetPassword = async (req,res) => {
             message: 'Somethinng Went Wrong While Resetting Password'
         });
     }
-}
+};
 
