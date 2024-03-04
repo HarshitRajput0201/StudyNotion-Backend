@@ -18,8 +18,8 @@ exports.signUp = async (req, res) => {
             password,
             confirmPassword,
             accountType,
-            contactNumber,
-            otp
+            otp,
+            contactNumber
         } = req.body;
 
         if(!firstName || !lastName || !email || !password || !confirmPassword || !otp) {
@@ -58,7 +58,7 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        const hashedPassword = bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         let approved = '';
         approved === 'Instructor' ? (approved = false) : (approved = true);

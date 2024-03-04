@@ -35,10 +35,10 @@ app.use(
 
 cloudinaryConnect();
 
-app.use('/api/users', userRoutes);
-app.use('/api/profiles', profileRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/courses', courseRoutes);
+app.use('/api/auth', userRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/course', courseRoutes);
 
 app.get('/', (req, res) => {
     return res.json({
