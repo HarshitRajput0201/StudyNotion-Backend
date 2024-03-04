@@ -24,10 +24,19 @@
                                                                 {
                                                                     new: true
                                                                 }
-        );
+                                                            )
+                                                            .populate({
+                                                                path: 'courseContent',
+                                                                populate: {
+                                                                    path: 'SubSection'
+                                                                }
+                                                            })
+                                                            .exec();
+
         return res.status(200).json({
             success: true,
-            message: 'Section Created'
+            message: 'Section Created',
+            updateCourseDetails
         });
     }
     catch (error) {
@@ -37,7 +46,7 @@
             message: 'Error in Creating Section'
         });
     }
- }
+ };
 
  exports.updateSection = async (req, res) => {
     try {
@@ -71,7 +80,7 @@
             message: 'Section Cannot Update'
         });
     }
- }
+ };
 
  exports.deleteSection = async (req, res) => {
     try {
@@ -89,4 +98,4 @@
             message: 'Section Cannot Be Deleted'
         });
     }
- }
+ };
