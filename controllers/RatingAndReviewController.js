@@ -22,13 +22,13 @@ exports.createRating = async (req, res) => {
             });
         }
 
-        const alreadyReview = await RatingAndReviews.findOne(
+        const alreadyReviewed = await RatingAndReviews.findOne(
                                                         {
                                                             user: userId,
                                                             course: courseId
                                                         }
         );
-        if(alreadyReview){
+        if(alreadyReviewed){
             return res.status(401).json({
                 success: false,
                 message: 'Review Found!! Cannot Post Another Review'
@@ -43,13 +43,13 @@ exports.createRating = async (req, res) => {
                                                             user: userId
                                                         }
         );
-        await Course.findIdAndUpdate(
+        const updatedCourseDetails = await Course.findIdAndUpdate(
                                 { 
                                     _id: courseId 
                                 },
                                 {
                                     $push: {
-                                        ratingAndReview: ratingReview._id
+                                        RatingAndReviews: ratingReview._id
                                     }
                                 },
                                 {
@@ -58,7 +58,8 @@ exports.createRating = async (req, res) => {
         );
         return res.status(200).json({
             success: true,
-            message: 'Review Created'
+            message: 'Review Created',
+            updatedCourseDetails
         });
     } 
     catch (error) {
