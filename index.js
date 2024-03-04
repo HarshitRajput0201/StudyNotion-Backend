@@ -10,7 +10,7 @@ const database = require('./config/database');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { cloudinaryConnect } = require('./config/cloudinary');
-const fileUpload = require('express-file-upload');
+const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -41,7 +41,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/courses', courseRoutes);
 
 app.get('/', (req, res) => {
-    res.json({
+    return res.json({
         success: true,
         message: 'Server Is Running'
     })

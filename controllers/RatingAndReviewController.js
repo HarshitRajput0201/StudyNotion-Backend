@@ -1,4 +1,4 @@
-const RatingAndReviews = require('../models/RatingAndReviews');
+const RatingAndReviews = require('../models/RatingAndReview');
 const Course = require('../models/Course');
 
 exports.createRating = async (req, res) => {

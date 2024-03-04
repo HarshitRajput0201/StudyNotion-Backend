@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { createCategory, showAllCategories, categoryPageDetails } = require('../controllers/CategoryController');
-const { createCourse, getAllCourses, getCoursedetails } = require('../controllers/CourseController');
+const { createCourse, getAllCourses, getCourseDetails } = require('../controllers/CourseController');
 const { createSection, updateSection, deleteSection } = require('../controllers/SectionController');
 const { createSubSection, updateSubSection, deleteSubSection } = require('../controllers/SubSectionController');
 const { createRating, getAverageRating, getAllRating } = require('../controllers/RatingAndReviewController');
@@ -24,7 +24,7 @@ router.post('/deleteSection', auth, isInstructor, deleteSection);
 router.post('/addSubSection', auth, isInstructor, createSubSection);
 router.post('/updateSubSection', auth, isInstructor, updateSubSection);
 router.post('/deleteSubSection', auth, isInstructor, deleteSubSection);
-router.post('/getCourseDetails', getCoursedetails);
+router.post('/getCourseDetails', getCourseDetails);
 router.get('/getAllCourses', getAllCourses);
 
 
