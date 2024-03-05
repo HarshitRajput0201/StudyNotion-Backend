@@ -52,7 +52,7 @@ exports.showAllCategories = async (req, res) => {
 exports.categoryPageDetails = async (req, res) => {
     try {
         const { categoryId } = req.body;
-        const selectedCategory = await categoryId.findById(categoryId).populate('courses').exec();
+        const selectedCategory = await Category.findById(categoryId).populate('courses').exec();
         if(!selectedCategory){
             return res.status(401).json({
                 success: false,
@@ -60,7 +60,7 @@ exports.categoryPageDetails = async (req, res) => {
             });
         }
 
-        const differentCategory = await categoryId.find({ _id: { $ne: categoryId } }).populate('courses').exec();
+        const differentCategory = await Category.find({ _id: { $ne: categoryId } }).populate('courses').exec();
         return res.status(200).json({
             success: true,
             message: 'Showing Category Details',
@@ -74,7 +74,8 @@ exports.categoryPageDetails = async (req, res) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            message: 'Cannot Get Category Page Details'
+            message: 'Cannot Get Category Page Details',
+            error: error.message
         });
     }
 };

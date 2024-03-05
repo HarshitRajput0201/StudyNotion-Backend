@@ -6,7 +6,7 @@ const crypto = require('crypto');
 exports.resetPasswordToken = async (req, res) => {
 
     try {
-        const {email} = req.body;
+        const { email } = req.body;
         const user = await User.findOne({email: email});
         if(!user){
             return res.status(401).json({
@@ -28,10 +28,11 @@ exports.resetPasswordToken = async (req, res) => {
                                                         }
         );
         const url = `https://localhost:3000/update-password/${token}`;
-        await mailSender(email, 'Password Reset Link', `link: ${url}`);
+        const mail = await mailSender(email, 'Password Reset Link', `link: ${url}`);
         return res.status(201).json({
             success: true,
-            message: 'Link Sent Successfully'
+            message: 'Link Sent Successfully',
+            data: mail
         });
     } 
     catch (error) {

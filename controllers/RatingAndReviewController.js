@@ -1,5 +1,6 @@
-const RatingAndReviews = require('../models/RatingAndReview');
+const RatingAndReview = require('../models/RatingAndReview');
 const Course = require('../models/Course');
+const mongoose = require('mongoose');
 
 exports.createRating = async (req, res) => {
     try {
@@ -13,6 +14,7 @@ exports.createRating = async (req, res) => {
                                                             $eq: userId
                                                         }
                                                     } 
+
                                                 }
         );
         if(!courseDetails){
@@ -22,7 +24,7 @@ exports.createRating = async (req, res) => {
             });
         }
 
-        const alreadyReviewed = await RatingAndReviews.findOne(
+        const alreadyReviewed = await RatingAndReview.findOne(
                                                         {
                                                             user: userId,
                                                             course: courseId
@@ -35,7 +37,7 @@ exports.createRating = async (req, res) => {
             });
         }
 
-        const ratingReview = await RatingAndReviews.create(
+        const ratingReview = await RatingAndReview.create(
                                                         {
                                                             rating, 
                                                             review,
@@ -43,13 +45,13 @@ exports.createRating = async (req, res) => {
                                                             user: userId
                                                         }
         );
-        const updatedCourseDetails = await Course.findIdAndUpdate(
+        const updatedCourseDetails = await Course.findByIdAndUpdate(
                                 { 
                                     _id: courseId 
                                 },
                                 {
                                     $push: {
-                                        RatingAndReviews: ratingReview._id
+                                        ratingAndReviews: ratingReview._id
                                     }
                                 },
                                 {
@@ -74,7 +76,7 @@ exports.createRating = async (req, res) => {
 exports.getAverageRating = async (req, res) => {
     try {
         const courseId = req.body.courseId;
-        const result = await RatingAndReviews.aggregate([
+        const result = await RatingAndReview.aggregate([
                                                     {
                                                         $match: {
                                                             course: new mongoose.Types.ObjectId(courseId)
@@ -113,7 +115,7 @@ exports.getAverageRating = async (req, res) => {
 
 exports.getAllRating = async (req, res) => {
     try {
-        const allReviews = await RatingAndReviews.find({})
+        const allReviews = await RatingAndReview.find({})
                                                     .sort({ rating: 'desc'})
                                                     .populate(
                                                         {

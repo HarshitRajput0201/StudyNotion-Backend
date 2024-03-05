@@ -90,7 +90,8 @@ exports.signUp = async (req, res) => {
         console.log('Error in Sign Up', error);
         return res.status(401).json({
             success: false,
-            message: 'Failed To SignUp'
+            message: 'Failed To SignUp',
+            error: error.message
         });
     }
 
@@ -234,9 +235,10 @@ exports.changePassword = async (req, res) => {
         try {
             const emailResponse = await mailSender(
                 updatedUserDetails.email,
+                "Password Updated",
                 passwordUpdated(
                     updatedUserDetails.email,
-                    `Password Updated Successfully For ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
+                    `${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
                 )
             );
             console.log('Email Sent Successfully: ', emailResponse);

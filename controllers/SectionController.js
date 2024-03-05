@@ -28,7 +28,7 @@
                                                             .populate({
                                                                 path: 'courseContent',
                                                                 populate: {
-                                                                    path: 'SubSection'
+                                                                    path: 'subSection'
                                                                 }
                                                             })
                                                             .exec();
