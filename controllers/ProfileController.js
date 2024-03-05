@@ -63,7 +63,7 @@ exports.deleteAccount = async (req, res) => {
 exports.getAllUserDetails = async (req, res) => {
     try {
         const id = req.user.id;
-        const userDetails = await User.findById(id).populate('additionaldetails').exec();
+        const userDetails = await User.findById(id).populate('additionalDetails').exec();
         return res.status(200).json({
             success: true,
             message: 'User Details Found',
@@ -84,14 +84,26 @@ exports.updateDisplayPicture = async (req, res) => {
         const displayPicture = req.files.displayPicture;
         const userId = req.user.id;
         const image = await uploadImageToCloudinary(displayPicture, process.env.FOLDER_NAME, 1000, 1000);
-        const userDetails = await User.findById(userId);
-        const userProfile = await Profile.findById(userDetails.additionalDetails);
+
+        const userDetails = await User.findById(userId).populate('additionalDetails');
+        if(!userDetails || !userDetails.additionalDetails){
+            return res.status(401).json({
+                success: false,
+                message: 'User Or Profile Not Found'
+            });
+        }
+        const profileId = userDetails.additionalDetails._id;
+
+        const updatedProfile = await Profile.findByIdAndUpdate(
+                                                        { _id: profileId },
+                                                        { image: image.secure_url },
+                                                        { new: true }
+        );
         
-        userProfile.image = image.secure_url;
-        await userProfile.save();
         return res.status(200).json({
             success: true,
-            message: 'User Image Uploaded'
+            message: 'User Image Uploaded',
+            userDetails
         });
     } 
     catch (error) {

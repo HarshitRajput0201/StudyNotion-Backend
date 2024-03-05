@@ -39,7 +39,7 @@ exports.isStudent = async (req, res, next) => {
         if(req.user.accountType !== 'Student'){
             return res.status(401).json({
                 success: false,
-                message: 'This Route is only for Student'
+                message: 'This Route is only for Admin'
             });
         }
         next();
@@ -57,7 +57,7 @@ exports.isInstructor = async (req, res, next) => {
         if(req.user.accountType !== 'Instructor'){
             return res.status(401).json({
                 success: false,
-                message: 'This Route is only for Student'
+                message: 'This Route is only for Admin'
             });
         }
         next();
@@ -75,7 +75,7 @@ exports.isAdmin = async (req, res, next) => {
         if(req.user.accountType !== 'Admin'){
             return res.status(401).json({
                 success: false,
-                message: 'This Route is only for Student'
+                message: 'This Route is only for Admin'
             });
         }
         next();

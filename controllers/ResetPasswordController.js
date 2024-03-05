@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const mailSender = require("../utils/MailSender");
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 exports.resetPasswordToken = async (req, res) => {
 
@@ -37,7 +38,8 @@ exports.resetPasswordToken = async (req, res) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            message: 'Somethinng Went Wrong While Resetting Password'
+            message: 'Somethinng Went Wrong While Resetting Password',
+            error: error.message
         });
     }
 };
@@ -59,7 +61,7 @@ exports.resetPassword = async (req,res) => {
                 message: 'Invalid Token'
             });
         }
-        if(!(userDetails.resetPasswordExpires > Date.now())){
+        if(userDetails.resetPasswordExpires < Date.now()){
             return res.status(401).json({
                 success: false,
                 message: 'Token Expired'

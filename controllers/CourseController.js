@@ -9,7 +9,7 @@ exports.createCourse = async (req, res) => {
 
     try {
         const userId = req.user.id;
-        const { 
+        let { 
             courseName, 
             courseDescription, 
             price,
@@ -20,7 +20,7 @@ exports.createCourse = async (req, res) => {
             instructions
         } = req.body;
 
-        const thumbnail = req.file.thumbnailImage;
+        const thumbnail = req.files.thumbnailImage;
         if(!courseName || !courseDescription || !price || !tag || !category || !thumbnail || !courseBenefits){
             return res.status(401).json({
                 success: false,
@@ -101,7 +101,8 @@ exports.createCourse = async (req, res) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            message: 'Course Not Created'
+            message: 'Course Not Created',
+            error: error.message
         });
     }
 };
@@ -149,12 +150,13 @@ exports.getCourseDetails = async (req, res) => {
                                                                 }
                                                             )
                                                             .populate('category')
-                                                            .populate('ratingAndReviews')
+                                                            // .populate('ratingAndReviews')
                                                             .populate(
                                                                 {
                                                                     path: 'courseContent',
                                                                     populate: {
-                                                                        path: 'subSection'
+                                                                        path: 'subSection',
+                                                                        
                                                                     }
                                                                 }
                                                             )
@@ -175,7 +177,8 @@ exports.getCourseDetails = async (req, res) => {
         console.log(error);
         return res.status(401).json({
             success: false,
-            message: 'Course Not Found'
+            message: 'Course Not Found',
+            error: error.message
         });
     }
 };

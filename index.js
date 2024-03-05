@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
 
-const userRoutes = require('./routes/UserRoute');
-const profileRoutes = require('./routes/ProfileRoute');
-const paymentRoutes = require('./routes/PaymentRoute');
-const courseRoutes = require('./routes/CourseRoute');
+const userRoute = require('./routes/UserRoute');
+const profileRoute = require('./routes/ProfileRoute');
+const paymentRoute = require('./routes/PaymentRoute');
+const courseRoute = require('./routes/CourseRoute');
 
 const database = require('./config/database');
 const cookieParser = require('cookie-parser');
@@ -28,17 +28,17 @@ app.use(
 );
 app.use(
     fileUpload({
-        usetempFiles: true,
+        useTempFiles: true,
         tempFileDir: '/tmp'
     })
 );
 
 cloudinaryConnect();
 
-app.use('/api/auth', userRoutes);
-app.use('/api/profile', profileRoutes);
-app.use('/api/payment', paymentRoutes);
-app.use('/api/course', courseRoutes);
+app.use('/api/auth', userRoute);
+app.use('/api/profile', profileRoute);
+app.use('/api/payment', paymentRoute);
+app.use('/api/course', courseRoute);
 
 app.get('/', (req, res) => {
     return res.json({
